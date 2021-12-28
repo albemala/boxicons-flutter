@@ -51,42 +51,42 @@ Future<void> _generateIconsFile() async {
     "flutter" : "e937"
     "foursquare" : "e938"
   */
-  final regularIcons = RegExp(r'\.bx-([a-z-]+):before\s*{\s*content:\s*"\\([a-z0-9]+)";\s*}').allMatches(css);
-  final solidIcons = RegExp(r'\.bxs-([a-z-]+):before\s*{\s*content:\s*"\\([a-z0-9]+)";\s*}').allMatches(css);
-  final logoIcons = RegExp(r'\.bxl-([a-z-]+):before\s*{\s*content:\s*"\\([a-z0-9]+)";\s*}').allMatches(css);
+  final regularIcons = RegExp(r'\.bx-([a-z0-9-]+):before\s*{\s*content:\s*"\\([a-z0-9]+)";\s*}').allMatches(css);
+  final solidIcons = RegExp(r'\.bxs-([a-z0-9-]+):before\s*{\s*content:\s*"\\([a-z0-9]+)";\s*}').allMatches(css);
+  final logoIcons = RegExp(r'\.bxl-([a-z0-9-]+):before\s*{\s*content:\s*"\\([a-z0-9]+)";\s*}').allMatches(css);
 
   final regularIconsCode = regularIcons.map((match) {
     final iconName = match.group(1)?.replaceAll("-", "_") ?? "";
     final iconData = match.group(2) ?? "";
-    return "  static const IconData ${iconName}_regular = IconData(0x$iconData, fontFamily: iconFont, fontPackage: iconFontPackage, matchTextDirection: true);";
+    return "  static const IconData bx_${iconName}_regular = IconData(0x$iconData, fontFamily: iconFont, fontPackage: iconFontPackage, matchTextDirection: true);";
   }).join("\n");
   final solidIconsCode = solidIcons.map((match) {
     final iconName = match.group(1)?.replaceAll("-", "_") ?? "";
     final iconData = match.group(2) ?? "";
-    return "  static const IconData ${iconName}_solid = IconData(0x$iconData, fontFamily: iconFont, fontPackage: iconFontPackage, matchTextDirection: true);";
+    return "  static const IconData bx_${iconName}_solid = IconData(0x$iconData, fontFamily: iconFont, fontPackage: iconFontPackage, matchTextDirection: true);";
   }).join("\n");
   final logoIconsCode = logoIcons.map((match) {
     final iconName = match.group(1)?.replaceAll("-", "_") ?? "";
     final iconData = match.group(2) ?? "";
-    return "  static const IconData ${iconName}_logo = IconData(0x$iconData, fontFamily: iconFont, fontPackage: iconFontPackage, matchTextDirection: true);";
+    return "  static const IconData bx_${iconName}_logo = IconData(0x$iconData, fontFamily: iconFont, fontPackage: iconFontPackage, matchTextDirection: true);";
   }).join("\n");
 
   // Write icons to file
   final file = File("../lib/boxicons.dart");
   await file.writeAsString("""
-  library boxicons;
-  
-  import 'package:flutter/widgets.dart';
-  
-  class BoxIcons {
+library boxicons;
+
+import 'package:flutter/widgets.dart';
+
+class BoxIcons {
   BoxIcons._();
   
   static const String iconFont = 'boxicons';
   static const String iconFontPackage = 'boxicons';
   
-  $regularIconsCode
-  $solidIconsCode
-  $logoIconsCode
-  }
+$regularIconsCode
+$solidIconsCode
+$logoIconsCode
+}
       """);
 }
